@@ -28,7 +28,7 @@ class MainController {
         notesRepository.save(new Notes(
                 heading: "Тут что-то будет",
                 note: "Хибирнейт ит!",
-                ownerId: usersRepository.findById(4L)?.get()))
+                ownerId: usersRepository.findById(4L).get()))
 
         response.addHeader("Access-Control-Allow-Origin", "*")
 
@@ -37,45 +37,4 @@ class MainController {
         $/index/$
     }
 
-    @GetMapping(value = "/id/{id:\\d+}")
-    String getNote(@PathVariable("id") long id, HttpServletResponse response, Model model) {
-        response.addHeader("Access-Control-Allow-Origin", "*")
-
-        model.addAttribute("heading", notesRepository.findById(id).get().heading)
-        model.addAttribute("note", notesRepository.findById(id).get().note)
-
-        $/note/$
-    }
-
-    @PostMapping(value = "/api/del")
-    String deleteRequest(HttpServletResponse response, Model model, HttpServletRequest request) {
-        String id = request.getParameter "del"
-
-        notesRepository?.deleteById(id as Long)
-        response.addHeader("Access-Control-Allow-Origin", "*")
-        model.addAttribute("notes", notesRepository.findAll().dropRight(0))
-
-        $/block/$
-    }
-
-    @PostMapping(value = "/api/new")
-    String newRequst(HttpServletResponse response, Model model) {
-        response.addHeader("Access-Control-Allow-Origin", "*")
-        model.addAttribute("notes", notesRepository.findAll().drop(0).dropRight(0))
-
-        $/block/$
-    }
-
-    @PutMapping(value = "/api")
-    String addNote(HttpServletResponse response, Model model, HttpServletRequest request) {
-        String heading = request.getParameter "heading"
-        String note = request.getParameter "note"
-
-        notesRepository.save(new Notes(heading: heading, note: note))
-
-        response.addHeader("Access-Control-Allow-Origin", "*")
-        model.addAttribute("notes", notesRepository.findAll())
-
-        $/block/$
-    }
 }
