@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.apache.commons.lang.StringEscapeUtils
 
+import java.text.SimpleDateFormat
+
 @Service
 class NotesService {
 
@@ -101,7 +103,9 @@ class NotesService {
                      4: 'Мая', 5: 'Июня', 6: 'Июля', 7: 'Августа',
                      8: 'Сентября', 9: 'Октября', 10: 'Ноября', 11: 'Декабря']
 
-        def model = ["month": month, "notes": notes, "escape": StringEscapeUtils]
+        def timeFormat = new SimpleDateFormat('kk:mm')
+        timeFormat.setTimeZone(TimeZone.getTimeZone('Asia/Yekaterinburg'))
+        def model = ["month": month, "notes": notes, "escape": StringEscapeUtils, "timeFormat": timeFormat]
         def template = new MarkupTemplateEngine().createTemplateByPath('templates/block.tpl')
 
         String response = template.make(model)
