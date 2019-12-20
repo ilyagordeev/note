@@ -4,13 +4,10 @@ import com.snote.note.domain.Notes
 import com.snote.note.domain.Users
 import com.snote.note.repos.NotesRepository
 import com.snote.note.repos.UsersRepository
-import groovy.text.SimpleTemplateEngine
-import groovy.text.StreamingTemplateEngine
-import groovy.text.XmlTemplateEngine
 import groovy.text.markup.MarkupTemplateEngine
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.ui.Model
+import org.apache.commons.lang.StringEscapeUtils;
 
 @Service
 class NotesService {
@@ -46,14 +43,18 @@ class NotesService {
         notesRepository.findById(idNote as Long).ifPresent({n -> note = n})
         if (note == null) return [result: 'error', value: 'No such note']
 
-        [result: 'ok', heading: note.heading, text: note.note, id: note.id, timestamp: note.timestamp]
+        String heading = StringEscapeUtils.unescapeHtml(note.heading)
+        String text = StringEscapeUtils.unescapeHtml(note.note)
+
+        [result: 'ok', heading: heading, text: text, id: note.id, timestamp: note.timestamp]
     }
 
     // Добавить заметку
     Map<String, String> addNote(String heading, String text, Users user) {
+        if (!text) return [result: 'error', value: 'text parameter not present']
         def noteNode = new Notes(
-                heading: heading,
-                note: text,
+                heading: StringEscapeUtils.escapeHtml(heading),
+                note: StringEscapeUtils.escapeHtml(text),
                 ownerId: user
         )
         notesRepository.save(noteNode)
@@ -61,15 +62,16 @@ class NotesService {
     }
 
     // Изменить заметку
-    Map<String, String> editNote(String heading, String text, Users user, String idNote) {
-        if (!idNote) return [result: 'error', value: '"note" parameter not present']
+    Map<String, String> editNote(String heading, String text, String idNote) {
+        if (!idNote) return [result: 'error', value: 'id parameter not present']
+        if (!text) return [result: 'error', value: 'text parameter not present']
 
         Notes note
         notesRepository.findById(idNote as Long).ifPresent({n -> note = n})
         if (note == null) return [result: 'error', value: 'No such note']
 
-        note.heading = heading
-        note.note = text
+        note.heading = StringEscapeUtils.escapeHtml(heading)
+        note.note = StringEscapeUtils.escapeHtml(text)
 
         notesRepository.save(note)
 
@@ -106,6 +108,7 @@ class NotesService {
 
     // Список заголовков полностью
     Map<String, String> contents() {
-        contents(notesRepository.findAll() as List<Notes>)
+       // contents(notesRepository.findAll() as List<Notes>)
+        contents(notesRepository.findAllByOrderByIdDesc())
     }
 }
