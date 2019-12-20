@@ -52,7 +52,6 @@ class RestNotesController {
                 return notesService.editNote(
                         request.getParameter("heading"),
                         request.getParameter("note"),
-                        usersRepository.findById(4L).get(),
                         request.getParameter("id")
                 )
                 break
