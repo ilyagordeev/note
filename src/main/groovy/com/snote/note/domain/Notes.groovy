@@ -4,6 +4,7 @@ package com.snote.note.domain
 import org.hibernate.annotations.CreationTimestamp
 
 import javax.persistence.CascadeType
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -21,6 +22,7 @@ class Notes {
 
     String heading
     @NotNull
+    @Column(length = 4000)
     String note
     @CreationTimestamp
     Date timestamp
