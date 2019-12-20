@@ -45,7 +45,7 @@ class RestNotesController {
                 return notesService.addNote(
                         request.getParameter("heading"),
                         request.getParameter("note"),
-                        usersRepository.findById(4L).get()
+                        usersRepository.findById(1L).get()
                 )
                 break
             case 'edit':
