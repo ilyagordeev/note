@@ -30,6 +30,9 @@ dependencies {
    // implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.codehaus.groovy:groovy'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    // https://mvnrepository.com/artifact/org.apache.directory.studio/org.apache.commons.lang
+    compile group: 'org.apache.directory.studio', name: 'org.apache.commons.lang', version: '2.6'
+
     runtimeOnly 'com.h2database:h2'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

@@ -23,6 +23,7 @@ interface NotesRepository extends PagingAndSortingRepository<Notes, Long> {
     @Query("delete from Notes where id= ?1")
     int deleteNoteById(Long id)
 
-   // List<Notes> findAllByOrderByIdDesc()
+    @Query("FROM Notes ORDER BY timestamp desc")
+    List<Notes> findAllByOrderByIdDesc()
 
 }
