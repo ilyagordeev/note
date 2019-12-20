@@ -7,7 +7,7 @@ import com.snote.note.repos.UsersRepository
 import groovy.text.markup.MarkupTemplateEngine
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringEscapeUtils
 
 @Service
 class NotesService {
@@ -23,8 +23,7 @@ class NotesService {
         if (!idNote.isNumber()) return [result: 'error', value: 'id must be a number']
         if (!idNote.isLong()) return [result: 'error', value: 'id must be a integer number']
         def result = notesRepository.deleteNoteById(idNote as Long)
-        //[result: 'ok', value: result.toString()]
-        contents()
+        [result: 'ok', value: result.toString()]
     }
 
     // Добавление пользователя
@@ -43,8 +42,8 @@ class NotesService {
         notesRepository.findById(idNote as Long).ifPresent({n -> note = n})
         if (note == null) return [result: 'error', value: 'No such note']
 
-        String heading = StringEscapeUtils.unescapeHtml(note.heading)
-        String text = StringEscapeUtils.unescapeHtml(note.note)
+        String heading = note.heading
+        String text = note.note
 
         [result: 'ok', heading: heading, text: text, id: note.id, timestamp: note.timestamp]
     }
@@ -52,42 +51,46 @@ class NotesService {
     // Добавить заметку
     Map<String, String> addNote(String heading, String text, Users user) {
         if (!text) return [result: 'error', value: 'text parameter not present']
+        if (text.length() > 1000 || heading.length() > 50) return [result: 'error', value: 'Text size overhead']
         def noteNode = new Notes(
-                heading: StringEscapeUtils.escapeHtml(heading),
-                note: StringEscapeUtils.escapeHtml(text),
+                heading: heading,
+                note: text,
                 ownerId: user
         )
         notesRepository.save(noteNode)
-        contents()
+        [result: 'ok', value: 'Note added']
     }
 
     // Изменить заметку
     Map<String, String> editNote(String heading, String text, String idNote) {
         if (!idNote) return [result: 'error', value: 'id parameter not present']
         if (!text) return [result: 'error', value: 'text parameter not present']
+        if (text.length() > 1000 || heading.length() > 50) return [result: 'error', value: 'Text size overhead']
 
         Notes note
         notesRepository.findById(idNote as Long).ifPresent({n -> note = n})
         if (note == null) return [result: 'error', value: 'No such note']
 
-        note.heading = StringEscapeUtils.escapeHtml(heading)
-        note.note = StringEscapeUtils.escapeHtml(text)
+        note.heading = heading
+        note.note = text
 
         notesRepository.save(note)
 
-        contents()
+        [result: 'ok', value: 'Note changed']
     }
 
     // Поиск по заголовку
     Map<String, String> searchByHeading(String searched) {
-        def notes = notesRepository.findNotesWithSearchQueryHeading("%${searched}%")
+        String searchedText = searched
+        def notes = notesRepository.findNotesWithSearchQueryHeading("%${searchedText}%")
         if (!notes) return [result: 'nothing', value: 'Ничего не найдено']
         contents(notes)
     }
 
     // Поиск по тексту
     Map<String, String> searchByText(String searched) {
-        def notes = notesRepository.findNotesWithSearchQueryNote("%${searched}%")
+        String searchedText = searched
+        def notes = notesRepository.findNotesWithSearchQueryNote("%${searchedText}%")
         if (!notes) return [result: 'nothing', value: 'Ничего не найдено']
         contents(notes)
     }
@@ -98,7 +101,7 @@ class NotesService {
                      4: 'Мая', 5: 'Июня', 6: 'Июля', 7: 'Августа',
                      8: 'Сентября', 9: 'Октября', 10: 'Ноября', 11: 'Декабря']
 
-        def model = ["month": month, "notes": notes]
+        def model = ["month": month, "notes": notes, "escape": StringEscapeUtils]
         def template = new MarkupTemplateEngine().createTemplateByPath('templates/block.tpl')
 
         String response = template.make(model)
