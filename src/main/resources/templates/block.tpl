@@ -6,7 +6,7 @@ notes.each { note ->
         <div class="cards-item-data">
             <div class="cards-item-data-day">${note.timestamp.date}</div>
             <div class="cards-item-data-mes">${month[note.timestamp.month]}</div>
-            <div class="cards-item-data-time">${note.timestamp.hours+':'+note.timestamp.minutes}</div>
+            <div class="cards-item-data-time">${(note.timestamp.hours + 5) + ':'+note.timestamp.minutes}</div>
         </div>
 
         <div class="cards-item-inner">
