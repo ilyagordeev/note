@@ -12,10 +12,10 @@ import javax.transaction.Transactional
 @Repository
 interface NotesRepository extends PagingAndSortingRepository<Notes, Long> {
 
-    @Query("SELECT e FROM Notes AS e WHERE e.heading LIKE :search")
+    @Query("SELECT e FROM Notes AS e WHERE lower(e.heading) LIKE lower(:search)")
     List<Notes> findNotesWithSearchQueryHeading(@Param("search") String searchQuery)
 
-    @Query("SELECT e FROM Notes AS e WHERE e.note LIKE :search")
+    @Query("SELECT e FROM Notes AS e WHERE lower(e.note) LIKE lower(:search)")
     List<Notes> findNotesWithSearchQueryNote(@Param("search") String searchQuery)
 
     @Transactional
