@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/main.css">
+    <title>Simple cards 1</title>
+</head>
+<body>
+	<!--<div class="preloader">
+		<div class="preloader_ball"></div>
+		<div class="preloader_ball"></div>
+		<div class="preloader_ball"></div>
+	</div> -->
+	
+		<header>
+			<div class="wrapper_wide">
+				<div class="container">
+					<div class="header_flex">
+						
+						<div class="logo"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M21.8571 27H34V3H10L10.3132 27H15V33L21.8571 27Z" stroke="black" stroke-width="3"/><path d="M21.044 15.206V23H23.24V15.206H21.044ZM20.828 11.912C20.828 12.632 21.422 13.226 22.142 13.226C22.862 13.226 23.456 12.632 23.456 11.912C23.456 11.192 22.862 10.598 22.142 10.598C21.422 10.598 20.828 11.192 20.828 11.912Z" fill="black"/></svg>мои<br>заметки</div>					
+						<div class="cards-item-actions">
+							<span class="icon icon-search js-open-search"></span>
+							<span class="icon icon-usr"></span>
+							<span class="icon icon-add js-new" data-window="popup_editor"></span>
+						</div>
+					</div>
+					
+					
+				</div>
+			
+			</div>
+		</header>
+		
+		<main>
+		
+		<section class="section_search">
+			<div class="wrapper">
+				<div class="container">
+					<div class="search-items">
+							<div class="psevdolabel">Введите не менее трех символов</div>
+							<div class="form_item">
+								<input type="text" value="" class=" item_f_search" placeholder="Поиск">
+							</div>
+								<div class="psevdolabel">Область поиска</div>
+									<div class="checkcontainers">
+										<label class="checkcontainer">
+											Заголовок		
+											<input type="radio" value="SearchByHeader" id="SearchByHeader" name="SearchArea" class="custom-control-input  js-check" checked>
+											<span class="radiobtn"></span>
+										</label>
+
+										<label class="checkcontainer">
+											Текст заметки  		
+											<input type="radio" value="SearchByText" id="SearchByText" name="SearchArea" class="custom-control-input  js-check" >
+											<span class="radiobtn"></span>
+										</label>
+										
+		
+									</div>
+									
+									<div class="errmsg"></div>
+						
+					</div>	
+				</div>
+			</div>
+		</section>		
+		<section>
+			<div class="wrapper">
+				<div class="container">
+					
+					
+
+
+
+					<div class="cards-items">
+
+						
+					</div>
+				</div>
+			</div>
+		</section>
+		
+		<!--<section>
+			<div class="wrapper">
+				<div class="container">
+		
+									<div class="pagination-pages center">
+										<ul class="pagination ">
+		
+
+											<li class="">
+												<a href="">1</a>
+											</li>
+												<li class="active">
+												<span>2</span>
+											</li>
+											<li class="">
+												<a href="">3</a>
+											</li>
+											
+											<li class="">
+												<a href="">...</a>
+											</li>
+											
+											<li class="">
+												<a href="">97</a>
+											</li>
+											
+					
+										</ul>
+									</div>
+		
+		
+				</div>
+			</div>
+		</section> -->
+
+	</main>
+	<footer>
+	<div class="wrapper_wide">
+				<div class="container">Simple Note</div>
+			</div>
+	</footer>
+	
+			<div class="adm_message js-adm_message js-adm_message_template"><!--adm_message_show adm_message_ok adm_message_error adm_message_warning -->
+					<div class="wrapper_wide">
+				<div class="container">
+				<div class="adm_message_table">	
+					<div class="adm_message_td">	
+						<span class="js-adm-message-text">Текст сообщения</span>
+						<div class="adm_message_advice">Сообщение исчезнет через <b class="adm_message_seconds">10</b> секунд</div>
+					</div>
+					<div class="adm_message_td">	
+						<div class="icon icon-cross js-close-adm-message"></div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div class="shadow"><div class="shadow_scroll"><!-- тень окон. Чтобы показать открытое окно при загрузке, добавляем класс open к тени и к окну, а к боди - body__menu_open -->
+		
+						
+			
+			<div class="popup popup_editor"><!-- open popup-->
+				<div class="popup_cell">
+					<div class="popup_content">
+						<span href="" class="js-closepopup closepopup"></span>
+						
+												
+						<form>
+							
+							<div class="form_item">
+								<input type="text" value="Заголовок" class="item_f  item_f_head" placeholder="Введите заголовок">
+							</div>
+							<div class="form_item">
+								<textarea class="item_f item_f_text"></textarea>
+								<div class="item_f_alert"></div>
+							</div>
+						</form>
+						<div class="adm-btn-mcounter">
+						
+							<div>
+								<a href="" title="Отправить" class="adm-btn mr15 js-save" >Сохранить</a>
+								<a href="" title="Отправить" class="adm-btn adm-btn-second js-closepopup">Отмена</a>
+																	
+							</div>
+							
+							<a href="" title="Удалить " class="adm-btn adm-btn-transparent mr15 js-delete" data-delete="">Удалить </a>
+						</div>
+					
+						
+
+					
+					</div>
+				</div>
+			</div><!-- close popup-->
+			
+			
+		</div><!-- /close popup counter shadow-->
+		</div><!-- /close popup shadow-->
+	
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+<script src="js/main.js"></script>
+
+
+</body>
+</html>
