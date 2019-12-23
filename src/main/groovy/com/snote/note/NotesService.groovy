@@ -103,7 +103,7 @@ class NotesService {
                      4: 'Мая', 5: 'Июня', 6: 'Июля', 7: 'Августа',
                      8: 'Сентября', 9: 'Октября', 10: 'Ноября', 11: 'Декабря']
 
-        def timeFormat = new SimpleDateFormat('kk:mm')
+        def timeFormat = new SimpleDateFormat('HH:mm')
         timeFormat.setTimeZone(TimeZone.getTimeZone('Asia/Yekaterinburg'))
         def model = ["month": month, "notes": notes, "escape": StringEscapeUtils, "timeFormat": timeFormat]
         def template = new MarkupTemplateEngine().createTemplateByPath('templates/block.tpl')
