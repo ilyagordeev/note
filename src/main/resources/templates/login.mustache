@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Login</title>
+</head>
+<body>
+<h1>
+    {{#httpServletRequest.remoteUser}}
+        {{httpServletRequest.remoteUser}}
+    {{/httpServletRequest.remoteUser}}
+</h1>
+
+<div>
+    {{#param}}
+        {{param.error}}
+    {{/param}}
+</div>
+<div>
+    {{#param}}
+        {{param.logout}}
+    {{/param}}
+</div>
+<form action="/login" method="post">
+    <div><label> User Name : <input type="text" name="username"/> </label></div>
+    <div><label> Password: <input type="password" name="password"/> </label></div>
+    <div><input type="hidden" name="_csrf" value="{{_csrf.token}}"/></div>
+    <div><input type="submit" value="Sign In"/></div>
+</form>
+<a href="/registration">Add user</a>
+<form action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+    <input type="submit" value="Sign Out"/>
+</form>
+</body>
+</html>

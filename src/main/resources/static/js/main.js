@@ -21,7 +21,7 @@ function ShowMessage(_message, _type, _needed_for_wait) {
 		clearInterval(int); // очищаем интервал, чтобы он не продолжал работу при _Seconds = 0
 		currmess.remove();
 	  }
-	}, 1000);
+	}, 100);
 
 }
 	
@@ -305,7 +305,7 @@ $(document).ready(function () {
             }).then(function(data) {
 				if (data.result == 'ok') {
 					if (body_data.type == 'contents') {
-						$('.cards-items').html('');
+					//	$('.cards-items').html('');
 						
 						$('.cards-items').html(data.value);      
 						console.log(data);		
@@ -313,13 +313,13 @@ $(document).ready(function () {
 						//ShowMessage('Список обновлен', 'ok', 5 );						
 					}
 					if (body_data.type == 'search_head') {
-						$('.cards-items').html('');
+					//	$('.cards-items').html('');
 						$('.cards-items').html(data.value);      
 						console.log(data);						
 					}
 					
 					if (body_data.type == 'search') {
-						$('.cards-items').html('');
+					//	$('.cards-items').html('');
 						$('.cards-items').html(data.value);      
 						console.log(data);						
 					}

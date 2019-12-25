@@ -1,10 +1,11 @@
 package com.snote.note.controller
 
 import com.snote.note.NotesService
-import com.snote.note.domain.Role
-import com.snote.note.domain.Users
+import com.snote.note.dom.Role
+import com.snote.note.dom.Users
 import com.snote.note.repos.UsersRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -22,8 +23,9 @@ class MainController {
     final PasswordEncoder passwordEncoder
 
 
-    @GetMapping("/old")
-    String handleRequest() {
+    @GetMapping("/")
+    String handleRequest(@AuthenticationPrincipal Users user, Model model) {
+        model.addAttribute("user", user.username)
         $/index/$
     }
 

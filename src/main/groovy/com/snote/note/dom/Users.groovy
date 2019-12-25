@@ -1,10 +1,9 @@
-package com.snote.note.domain
+package com.snote.note.dom
 
-import com.snote.note.domain.Notes
+
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
-import javax.persistence.CascadeType
 import javax.persistence.CollectionTable
 import javax.persistence.ElementCollection
 import javax.persistence.Entity
@@ -15,7 +14,6 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
-import javax.persistence.OneToMany
 import javax.validation.constraints.NotBlank
 
 @Entity
@@ -23,7 +21,7 @@ class Users implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id
+    long id
     @NotBlank(message = "Username can't be empty")
     String username
     @NotBlank(message = "Password can't be empty")
@@ -35,8 +33,8 @@ class Users implements UserDetails {
     @Enumerated(EnumType.STRING)
     Set<Role> roles
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Notes> noteId
+//    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Notes> noteId
 
     @Override
     Collection<? extends GrantedAuthority> getAuthorities() {

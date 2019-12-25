@@ -1,11 +1,11 @@
-package com.snote.note.domain
+package com.snote.note.dom
 
 
 import org.hibernate.annotations.CreationTimestamp
 
-import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -26,7 +26,8 @@ class Notes {
     String note
     @CreationTimestamp
     Date timestamp
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner")
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     Users owner
 }

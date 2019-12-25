@@ -1,7 +1,7 @@
 package com.snote.note
 
-import com.snote.note.domain.Notes
-import com.snote.note.domain.Users
+import com.snote.note.dom.Notes
+import com.snote.note.dom.Users
 import com.snote.note.repos.NotesRepository
 import com.snote.note.repos.UsersRepository
 import groovy.text.markup.MarkupTemplateEngine
@@ -20,10 +20,13 @@ class NotesService {
     final UsersRepository usersRepository
 
     // Удаление заметки
-    Map<String, String> deleteNote(String idNote) {
+    Map<String, String> deleteNote(String idNote, Users user) {
         if (!idNote) return [result: 'error', value: 'id parameter not present']
         if (!idNote.isNumber()) return [result: 'error', value: 'id must be a number']
         if (!idNote.isLong()) return [result: 'error', value: 'id must be a integer number']
+        Notes note
+        notesRepository.findById(idNote as Long).ifPresent({n -> note = n})
+        if (note == null || note.owner.id != user.id) return [result: 'error', value: 'No such note']
         def result = notesRepository.deleteNoteById(idNote as Long)
         [result: 'ok', value: result.toString()]
     }
@@ -36,13 +39,13 @@ class NotesService {
     }
 
     // Получить одну заметку по id
-    Map<String, Object> getOneNote(String idNote) {
+    Map<String, Object> getOneNote(String idNote, Users user) {
         if (!idNote) return [result: 'error', value: 'id parameter not present']
         if (!idNote.isNumber()) return [result: 'error', value: 'id must be a number']
         if (!idNote.isLong()) return [result: 'error', value: 'id must be a integer number']
         Notes note
         notesRepository.findById(idNote as Long).ifPresent({n -> note = n})
-        if (note == null) return [result: 'error', value: 'No such note']
+        if (note == null || note.owner.id != user.id) return [result: 'error', value: 'No such note']
 
         String heading = note.heading
         String text = note.note
@@ -57,21 +60,21 @@ class NotesService {
         def noteNode = new Notes(
                 heading: heading,
                 note: text,
-                ownerId: user
+                owner: user
         )
         notesRepository.save(noteNode)
         [result: 'ok', value: 'Note added']
     }
 
     // Изменить заметку
-    Map<String, String> editNote(String heading, String text, String idNote) {
+    Map<String, String> editNote(String heading, String text, String idNote, Users user) {
         if (!idNote) return [result: 'error', value: 'id parameter not present']
         if (!text) return [result: 'error', value: 'text parameter not present']
         if (text.length() > 1000 || heading.length() > 50) return [result: 'error', value: 'Text size overhead']
 
         Notes note
         notesRepository.findById(idNote as Long).ifPresent({n -> note = n})
-        if (note == null) return [result: 'error', value: 'No such note']
+        if (note == null || note.owner.id != user.id) return [result: 'error', value: 'No such note']
 
         note.heading = heading
         note.note = text
@@ -82,17 +85,17 @@ class NotesService {
     }
 
     // Поиск по заголовку
-    Map<String, String> searchByHeading(String searched) {
+    Map<String, String> searchByHeading(String searched, Users user) {
         String searchedText = searched
-        def notes = notesRepository.findNotesWithSearchQueryHeading("%${searchedText}%")
+        def notes = notesRepository.findNotesWithSearchQueryHeading(user,"%${searchedText}%")
         if (!notes) return [result: 'nothing', value: 'Ничего не найдено']
         contents(notes)
     }
 
     // Поиск по тексту
-    Map<String, String> searchByText(String searched) {
+    Map<String, String> searchByText(String searched, Users user) {
         String searchedText = searched
-        def notes = notesRepository.findNotesWithSearchQueryNote("%${searchedText}%")
+        def notes = notesRepository.findNotesWithSearchQueryNote(user,"%${searchedText}%")
         if (!notes) return [result: 'nothing', value: 'Ничего не найдено']
         contents(notes)
     }
@@ -114,8 +117,8 @@ class NotesService {
     }
 
     // Список заголовков полностью
-    Map<String, String> contents() {
-       // contents(notesRepository.findAll() as List<Notes>)
-        contents(notesRepository.findAllByOrderByIdDesc())
+    Map<String, String> contentsByUser(Users user) {
+      //  contents(notesRepository.findAllByOrderByIdDesc())
+        contents(notesRepository.findAllByOwnerOrderByTimestampDesc(user))
     }
 }

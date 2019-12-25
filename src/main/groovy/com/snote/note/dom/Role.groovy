@@ -1,4 +1,4 @@
-package com.snote.note.domain
+package com.snote.note.dom
 
 import org.springframework.security.core.GrantedAuthority
 

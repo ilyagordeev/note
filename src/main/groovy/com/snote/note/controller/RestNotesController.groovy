@@ -1,7 +1,7 @@
 package com.snote.note.controller
 
 import com.snote.note.NotesService
-import com.snote.note.domain.Users
+import com.snote.note.dom.Users
 import com.snote.note.repos.NotesRepository
 import com.snote.note.repos.UsersRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,43 +33,42 @@ class RestNotesController {
             HttpServletResponse response,
             HttpServletRequest request
     ) {
-        println(request.remoteUser)
-      //  println(user.username)
-      //  String type = request.getParameter "type"
         println(type)
         response.addHeader("Access-Control-Allow-Origin", "*")
         switch (type) {
-            case 'adduser':
-                return notesService.addUser(request.getParameter("name"), request.getParameter("password"))
-                break
+            case 'addnote':
+            return notesService.addNote(
+                    request.getParameter("heading"),
+                    request.getParameter("note"),
+                    user
+            )
+            break
+//            case 'adduser':
+//                return notesService.addUser(request.getParameter("name"), request.getParameter("password"))
+//                break
             case 'note':
-                return notesService.getOneNote(request.getParameter("id"))
+                return notesService.getOneNote(request.getParameter("id"), user)
                 break
             case 'delete':
-                return notesService.deleteNote(request.getParameter("id"))
+                return notesService.deleteNote(request.getParameter("id"), user)
                 break
             case 'contents':
-                return notesService.contents()
+                return notesService.contentsByUser(user)
                 break
-            case 'addnote':
-                return notesService.addNote(
-                        request.getParameter("heading"),
-                        request.getParameter("note"),
-                        user
-                )
-                break
+
             case 'edit':
                 return notesService.editNote(
                         request.getParameter("heading"),
                         request.getParameter("note"),
-                        request.getParameter("id")
+                        request.getParameter("id"),
+                        user
                 )
                 break
             case 'search':
-                return notesService.searchByText(request.getParameter("text"))
+                return notesService.searchByText(request.getParameter("text"), user)
                 break
             case 'search_head':
-                return notesService.searchByHeading(request.getParameter("text"))
+                return notesService.searchByHeading(request.getParameter("text"), user)
                 break
             default:
                 return [result: 'error', value: 'type not valid']
