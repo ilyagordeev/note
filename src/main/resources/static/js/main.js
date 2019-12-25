@@ -187,7 +187,7 @@ $(document).ready(function () {
 			//Перерисовываем страницу
 				setTimeout(function () {
 					ajaxCall(api_url, {type: "contents"});
-				  }, 1000)	
+				  }, 100)
 			
 		}
 

@@ -35,7 +35,7 @@ class Users implements UserDetails {
     @Enumerated(EnumType.STRING)
     Set<Role> roles
 
-    @OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notes> noteId
 
     @Override

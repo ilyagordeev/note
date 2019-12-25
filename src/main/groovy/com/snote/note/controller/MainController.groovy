@@ -22,7 +22,7 @@ class MainController {
     final PasswordEncoder passwordEncoder
 
 
-    @GetMapping("/")
+    @GetMapping("/old")
     String handleRequest() {
         $/index/$
     }

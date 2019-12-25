@@ -26,6 +26,7 @@ class Notes {
     String note
     @CreationTimestamp
     Date timestamp
-
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "owner")
     Users owner
 }
