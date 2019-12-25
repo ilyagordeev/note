@@ -30,7 +30,7 @@ class NotesService {
 
     // Добавление пользователя
     Map<String, String> addUser(String name, String password) {
-        usersRepository.save(new Users(username: name, hashpass: password.sha256()))
+        usersRepository.save(new Users(username: name, password: password.sha256()))
         def value = "User $name added with hash ${password.sha256()}"
         [result: 'ok', value: value.toString()]
     }

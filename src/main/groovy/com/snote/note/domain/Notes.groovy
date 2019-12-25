@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull
 class Notes {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Long id
 
     String heading
@@ -26,7 +26,6 @@ class Notes {
     String note
     @CreationTimestamp
     Date timestamp
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ownerId")
-    Users ownerId
+
+    Users owner
 }

@@ -23,13 +23,20 @@ function ShowMessage(_message, _type, _needed_for_wait) {
 	  }
 	}, 1000);
 
-
 }
 	
 
 $(document).ready(function () {
 
 	var api_url = "/api"
+
+	// Set CSRF token
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	$(document).ajaxSend(function(e, xhr, options) {
+		xhr.setRequestHeader(header, token);
+	});
+
 
 	ajaxCall(api_url, {type: "contents"});
 	var body = $("body");
@@ -54,7 +61,6 @@ $(document).ready(function () {
 			$('.item_f_search').focus();
 		}
 
-		
 	});
 	
 	
@@ -79,8 +85,7 @@ $(document).ready(function () {
 			{
 				ajaxCall(api_url, {type: "search_head", text: Value});
 			}
-			
-			
+
 	  }
 	 
 	});
@@ -120,10 +125,8 @@ $(document).ready(function () {
 			//Перерисовываем страницу
 				setTimeout(function () {
 					ajaxCall(api_url, {type: "contents"});
-				  }, 1000)	
+				  }, 100)
 
-		
-		
 	});	
 	
 	$(body).on("click", ".cards-item .cards-item-inner .icon-cross", function (e) {
@@ -137,10 +140,8 @@ $(document).ready(function () {
 			//Перерисовываем страницу
 				setTimeout(function () {
 					ajaxCall(api_url, {type: "contents"});
-				  }, 1000)	
+				  }, 100)
 
-		
-		
 	});
 	
 	
@@ -174,14 +175,13 @@ $(document).ready(function () {
 			// Сохраняем
 			 if ($('.js-save').hasClass('new') )
 			 {
-				 ajaxCall(api_url, {type: "addnote", heading: header, note: bodytext });
+				 ajaxCall(api_url, {type: "addnote", heading: header, note: bodytext});
 			 }
 			 else
 			 {
 				  var myid = parseInt($('.js-delete').attr('data-id'));
 				 
-				  ajaxCall(api_url, {type: "edit", heading: header, note: bodytext, id: myid });
-				 // ajaxCall(api_url, {type: "edit", heading: '63', note: '63', id: '63' });
+				  ajaxCall(api_url, {type: "edit", heading: header, note: bodytext, id: myid});
 			 }
 				
 			//Перерисовываем страницу
@@ -190,11 +190,7 @@ $(document).ready(function () {
 				  }, 1000)	
 			
 		}
-		
 
-		
-		
-		
 	});
 	
 	//POPUP
@@ -250,12 +246,6 @@ $(document).ready(function () {
 		{
 			
 		}
-			
-			
-
-		
-			
-	
 
 	});
 

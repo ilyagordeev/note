@@ -1,12 +1,15 @@
 package com.snote.note.controller
 
 import com.snote.note.NotesService
+import com.snote.note.domain.Users
 import com.snote.note.repos.NotesRepository
 import com.snote.note.repos.UsersRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 import javax.servlet.http.HttpServletRequest
@@ -24,8 +27,15 @@ class RestNotesController {
     final NotesService notesService
 
     @PostMapping
-    Map<String, Object> getOneNote(HttpServletResponse response, HttpServletRequest request) {
-        String type = request.getParameter "type"
+    Map<String, Object> getOneNote(
+            @AuthenticationPrincipal Users user,
+            @RequestParam String type,
+            HttpServletResponse response,
+            HttpServletRequest request
+    ) {
+        println(request.remoteUser)
+      //  println(user.username)
+      //  String type = request.getParameter "type"
         println(type)
         response.addHeader("Access-Control-Allow-Origin", "*")
         switch (type) {
@@ -45,7 +55,7 @@ class RestNotesController {
                 return notesService.addNote(
                         request.getParameter("heading"),
                         request.getParameter("note"),
-                        usersRepository.findById(1L).get()
+                        user
                 )
                 break
             case 'edit':
