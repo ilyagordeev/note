@@ -21,7 +21,7 @@ function ShowMessage(_message, _type, _needed_for_wait) {
 		clearInterval(int); // очищаем интервал, чтобы он не продолжал работу при _Seconds = 0
 		currmess.remove();
 	  }
-	}, 100);
+	}, 1000);
 
 }
 	
@@ -121,11 +121,10 @@ $(document).ready(function () {
 						
 			hidePopup();
 			// Сохраняем
-				ajaxCall(api_url, {type: "delete", id: needdtodel});
-			//Перерисовываем страницу
-				setTimeout(function () {
-					ajaxCall(api_url, {type: "contents"});
-				  }, 100)
+			ajaxCall(api_url, {type: "delete", id: needdtodel})
+				.then(function () {
+					ajaxCall(api_url, {type: "contents"})
+				});
 
 	});	
 	
@@ -136,22 +135,34 @@ $(document).ready(function () {
 						
 			hidePopup();
 			// Сохраняем
-				ajaxCall(api_url, {type: "delete", id: needdtodel});
-			//Перерисовываем страницу
-				setTimeout(function () {
-					ajaxCall(api_url, {type: "contents"});
-				  }, 100)
+			ajaxCall(api_url, {type: "delete", id: needdtodel})
+				.then(function () {
+					ajaxCall(api_url, {type: "contents"})
+				});
 
 	});
 	
-	
+
+
 	//SAVE or EDIT
+
 	$('.item_f_head').keydown(function(e) {
-    if(e.keyCode === 13) {
-      e.preventDefault();
-	  $('.item_f_text').focus();
-    }
-  });
+		if(e.keyCode === 13) {
+		  e.preventDefault();
+		  $('.item_f_text').focus();
+		}
+		if(e.keyCode === 27) {
+			e.preventDefault();
+			hidePopup();
+		}
+    });
+
+	$('.item_f_text').keydown(function(e) {
+		if(e.keyCode === 27) {
+			e.preventDefault();
+			hidePopup();
+		}
+    });
   
 	$(body).on("click", ".js-save", function (e) {
 		e.preventDefault();
@@ -166,33 +177,35 @@ $(document).ready(function () {
 			ShowMessage('Заполните заметку!', 'error', 3 );
 			setTimeout(function () {
 				$('.item_f_alert').text('');
-			}, 3000)	
-				  
+			}, 3000)
 		}
 		else
 		{
 			hidePopup();
+
 			// Сохраняем
 			 if ($('.js-save').hasClass('new') )
 			 {
-				 ajaxCall(api_url, {type: "addnote", heading: header, note: bodytext});
+				 ajaxCall(api_url, {type: "addnote", heading: header, note: bodytext})
+					 .then(function() {
+					 	ajaxCall(api_url, {type: "contents"})
+					 });
 			 }
 			 else
 			 {
 				  var myid = parseInt($('.js-delete').attr('data-id'));
 				 
-				  ajaxCall(api_url, {type: "edit", heading: header, note: bodytext, id: myid});
+				  ajaxCall(api_url, {type: "edit", heading: header, note: bodytext, id: myid})
+					  .then(function() {
+					  	ajaxCall(api_url, {type: "contents"})
+					  });
 			 }
-				
-			//Перерисовываем страницу
-				setTimeout(function () {
-					ajaxCall(api_url, {type: "contents"});
-				  }, 100)
 			
 		}
 
 	});
-	
+
+
 	//POPUP
 
 	$(body).on("click", "a[data-window], span[data-window], button[data-window], input[data-window], div[data-window]", function (e) {
@@ -201,7 +214,7 @@ $(document).ready(function () {
 		if (!$(e.target).closest(".icon-cross").length) {
 			
 			$('.item_f').val('');
-				$('.item_f_head').val('');
+			$('.item_f_head').val('');
 			
 			$('.shadow').removeClass('open');
 			$('.popup').removeClass('open');
@@ -249,8 +262,8 @@ $(document).ready(function () {
 
 	});
 
-	//POPUP_CLOSE
 
+	//POPUP_CLOSE
 
 		function hidePopup(){
 	
@@ -297,66 +310,68 @@ $(document).ready(function () {
 			
 	
 	function ajaxCall(api_url, body_data) {
-        $.ajax({
-            url: api_url,
-            type: "POST",
+		return $.ajax({
+			url: api_url,
+			type: "POST",
 			dataType: "json",
-            data: body_data,
-            }).then(function(data) {
-				if (data.result == 'ok') {
-					if (body_data.type == 'contents') {
+			data: body_data,
+		}).then(function (data) {
+			if (data.result == 'ok') {
+				if (body_data.type == 'contents') {
 					//	$('.cards-items').html('');
-						
-						$('.cards-items').html(data.value);      
-						console.log(data);		
 
-						//ShowMessage('Список обновлен', 'ok', 5 );						
-					}
-					if (body_data.type == 'search_head') {
-					//	$('.cards-items').html('');
-						$('.cards-items').html(data.value);      
-						console.log(data);						
-					}
-					
-					if (body_data.type == 'search') {
-					//	$('.cards-items').html('');
-						$('.cards-items').html(data.value);      
-						console.log(data);						
-					}
-					
-					if (body_data.type == 'delete') {
-						ShowMessage('Заметка удалена', 'ok', 3 );						
-					}
-					
-					if (body_data.type == 'addnote') {
-						ShowMessage('Заметка добавлена', 'ok', 3 );						
-					}					
+					$('.cards-items').html(data.value);
+					console.log("contents");
 
-					if (body_data.type == 'edit') {
-						ShowMessage('Заметка изменена', 'ok', 3 );						
-					}					
-					
-					
-					if (body_data.type == 'note') {
-						var heading = data.heading;
-						var mytext = data.text;
-						var id = data.id;
-						
-						$('.item_f').val(mytext);
-						$('.item_f_head').val(heading);
-						
-						$('.item_f_head').focus();
-						
-						console.log(data);						
-					}
+					//ShowMessage('Список обновлен', 'ok', 5 );
 				}
-				if (data.result == 'error') {
-					ShowMessage(data.value, 'error', 5 );
-					
+				if (body_data.type == 'search_head') {
+					//	$('.cards-items').html('');
+					$('.cards-items').html(data.value);
+					console.log('search_head');
 				}
-				
-				
-            });
+
+				if (body_data.type == 'search') {
+					//	$('.cards-items').html('');
+					$('.cards-items').html(data.value);
+					console.log('search');
+				}
+
+				if (body_data.type == 'delete') {
+					console.log('delete');
+					ShowMessage('Заметка удалена', 'ok', 3);
+				}
+
+				if (body_data.type == 'addnote') {
+					console.log('addnote');
+					ShowMessage('Заметка добавлена', 'ok', 3);
+				}
+
+				if (body_data.type == 'edit') {
+					console.log('edit');
+					ShowMessage('Заметка изменена', 'ok', 3);
+				}
+
+
+				if (body_data.type == 'note') {
+					var heading = data.heading;
+					var mytext = data.text;
+					var id = data.id;
+
+					$('.item_f').val(mytext);
+					$('.item_f_head').val(heading);
+
+					$('.item_f_head').focus();
+
+					console.log("note");
+				}
+			}
+			if (data.result == 'error') {
+				console.log('error');
+				ShowMessage(data.value, 'error', 5);
+			}
+
+		});
     }
 
 });
