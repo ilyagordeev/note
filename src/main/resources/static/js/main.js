@@ -1,25 +1,25 @@
 
 function ShowMessage(_message, _type, _needed_for_wait) {
 
-	var currmess = $('.js-adm_message_template').clone(true).appendTo('body');
-	currmess.removeClass('js-adm_message_template');
-	currmess.addClass('adm_message_show');
-	currmess.find('.js-adm-message-text').text(_message);
-	var _Class='';
-	if (_type == 'ok') { var _Class='adm_message_ok'}
-	if (_type == 'error') { var _Class='adm_message_error'}
-	if (_type == 'warning') { var _Class='adm_message_warning'}
-	currmess.addClass(_Class);
+	const currMess = $('.js-adm_message_template').clone(true).appendTo('body');
+	currMess.removeClass('js-adm_message_template');
+	currMess.addClass('adm_message_show');
+	currMess.find('.js-adm-message-text').text(_message);
+	let _Class = '';
+	if (_type === 'ok') { _Class='adm_message_ok'}
+	if (_type === 'error') { _Class='adm_message_error'}
+	if (_type === 'warning') { _Class='adm_message_warning'}
+	currMess.addClass(_Class);
 
-	var _Seconds = _needed_for_wait,  int;
-		 currmess.find('.adm_message_seconds').text(_Seconds);
+	let _Seconds = _needed_for_wait, int;
+	currMess.find('.adm_message_seconds').text(_Seconds);
 	int = setInterval(function() { // запускаем интервал
 	  if (_Seconds > 0) {
 		_Seconds--; // вычитаем 1
-		 currmess.find('.adm_message_seconds').text(_Seconds); // выводим получившееся значение в блок
+		 currMess.find('.adm_message_seconds').text(_Seconds); // выводим получившееся значение в блок
 	  } else {
 		clearInterval(int); // очищаем интервал, чтобы он не продолжал работу при _Seconds = 0
-		currmess.remove();
+		currMess.remove();
 	  }
 	}, 1000);
 
@@ -28,37 +28,39 @@ function ShowMessage(_message, _type, _needed_for_wait) {
 
 $(document).ready(function () {
 
-	var api_url = "/api"
+	const api_url = "/api";
 
 	// Set CSRF token
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
-	$(document).ajaxSend(function(e, xhr, options) {
+	const token = $("meta[name='_csrf']").attr("content");
+	const header = $("meta[name='_csrf_header']").attr("content");
+	$(document).ajaxSend(function(e, xhr) {
 		xhr.setRequestHeader(header, token);
 	});
 
 
 	ajaxCall(api_url, {type: "contents"});
-	var body = $("body");
-	
+	const body = $("body");
+
 	// OPEN-CLOSE SEARCH 
 	$('.js-open-search').click(function (e) {
 		e.preventDefault();
-		
-		if ($('.section_search').hasClass('open'))
+
+		const section_search = $('.section_search');
+		if (section_search.hasClass('open'))
 		{
-			$('.section_search').removeClass('open');
+			section_search.removeClass('open');
 			ajaxCall(api_url, {type: "contents"});
 			$('.js-open-search').removeClass('icon-cross');
 			
 		}
 		else
 		{
-			$('.section_search').addClass('open');
+			section_search.addClass('open');
 			$('.cards-items').html('');
 			$('.js-open-search').addClass('icon-cross');
-			$('.item_f_search').val('');
-			$('.item_f_search').focus();
+			const item_f_search = $('.item_f_search');
+			item_f_search.val('');
+			item_f_search.focus();
 		}
 
 	});
@@ -67,25 +69,22 @@ $(document).ready(function () {
 	// PRESS KEY IN SEARCH 
 	
 	$('.item_f_search').keyup(function(){
-	  var Value = $('.item_f_search').val();
-	  
-	  if (Value.length > 2)
+
+		const item_f_search = $('.item_f_search');
+		const Value = item_f_search.val();
+
+		if (Value.length > 2)
 	  {
-			//$('.errmsg').empty();
-			//$('.errmsg').text(Value);
-			//$('.cards-items').html('');
 			$('.cards-items').html('');
 			
-			if ($('.item_f_search').hasClass('SearchByText'))
+			if (item_f_search.hasClass('SearchByText'))
 			{
 				ajaxCall(api_url, {type: "search", text: Value});
-				
 			}
 			else
 			{
 				ajaxCall(api_url, {type: "search_head", text: Value});
 			}
-
 	  }
 	 
 	});
@@ -93,20 +92,21 @@ $(document).ready(function () {
 	//Изменение области поиска
 	$('.js-check').change(function () {
 		
-		$('.item_f_search').val('');
-		$('.item_f_search').focus();
-		
-		var radioBtn = $('input[name=SearchArea]:checked').val();
+		let item_f_search = $('.item_f_search');
+		item_f_search.val('');
+		item_f_search.focus();
 
-		if (radioBtn == 'SearchByHeader')
+		const radioBtn = $('input[name=SearchArea]:checked').val();
+
+		if (radioBtn === 'SearchByHeader')
 		{
-			$('.item_f_search').removeClass('SearchByText');
-			$('.item_f_search').addClass('SearchByHeader');
+			item_f_search.removeClass('SearchByText');
+			item_f_search.addClass('SearchByHeader');
 		}
-		if (radioBtn == 'SearchByText')
+		if (radioBtn === 'SearchByText')
 		{
-			$('.item_f_search').removeClass('SearchByHeader');
-			$('.item_f_search').addClass('SearchByText');
+			item_f_search.removeClass('SearchByHeader');
+			item_f_search.addClass('SearchByText');
 		}
 
 	});
@@ -114,28 +114,28 @@ $(document).ready(function () {
 	
 	//DELETE
 		
-	$(body).on("click", ".js-delete", function (e) {
+	body.on("click", ".js-delete", function (e) {
 		e.preventDefault();
-		
-		var needdtodel = parseInt($('.js-delete').attr('data-id'));
-						
-			hidePopup();
+
+		const needToDel = parseInt($('.js-delete').attr('data-id'));
+
+		hidePopup();
 			// Сохраняем
-			ajaxCall(api_url, {type: "delete", id: needdtodel})
+			ajaxCall(api_url, {type: "delete", id: needToDel})
 				.then(function () {
 					ajaxCall(api_url, {type: "contents"})
 				});
 
 	});	
 	
-	$(body).on("click", ".cards-item .cards-item-inner .icon-cross", function (e) {
+	body.on("click", ".cards-item .cards-item-inner .icon-cross", function (e) {
 		e.preventDefault();
-		
-		var needdtodel = parseInt($(this).parents('.cards-item').attr('data-id'));
-						
-			hidePopup();
+
+		const needToDel = parseInt($(this).parents('.cards-item').attr('data-id'));
+
+		hidePopup();
 			// Сохраняем
-			ajaxCall(api_url, {type: "delete", id: needdtodel})
+			ajaxCall(api_url, {type: "delete", id: needToDel})
 				.then(function () {
 					ajaxCall(api_url, {type: "contents"})
 				});
@@ -164,15 +164,16 @@ $(document).ready(function () {
 		}
     });
   
-	$(body).on("click", ".js-save", function (e) {
+	body.on("click", ".js-save", function (e) {
 		e.preventDefault();
-		
-		var header = $('.item_f_head').val();
-		var bodytext = $('.item_f_text').val();
-		
-		if (bodytext == '')
+
+		const header = $('.item_f_head').val();
+		const item_f_text = $('.item_f_text');
+		const bodyText = item_f_text.val();
+
+		if (bodyText === '')
 		{
-			$('.item_f_text').focus();
+			item_f_text.focus();
 			$('.item_f_alert').text('Заполните заметку!');
 			ShowMessage('Заполните заметку!', 'error', 3 );
 			setTimeout(function () {
@@ -186,16 +187,16 @@ $(document).ready(function () {
 			// Сохраняем
 			 if ($('.js-save').hasClass('new') )
 			 {
-				 ajaxCall(api_url, {type: "addnote", heading: header, note: bodytext})
+				 ajaxCall(api_url, {type: "addnote", heading: header, note: bodyText})
 					 .then(function() {
 					 	ajaxCall(api_url, {type: "contents"})
 					 });
 			 }
 			 else
 			 {
-				  var myid = parseInt($('.js-delete').attr('data-id'));
-				 
-				  ajaxCall(api_url, {type: "edit", heading: header, note: bodytext, id: myid})
+				 const myid = parseInt($('.js-delete').attr('data-id'));
+
+				 ajaxCall(api_url, {type: "edit", heading: header, note: bodyText, id: myid})
 					  .then(function() {
 					  	ajaxCall(api_url, {type: "contents"})
 					  });
@@ -208,43 +209,45 @@ $(document).ready(function () {
 
 	//POPUP
 
-	$(body).on("click", "a[data-window], span[data-window], button[data-window], input[data-window], div[data-window]", function (e) {
+	body.on("click", "a[data-window], span[data-window], button[data-window], input[data-window], div[data-window]", function (e) {
 		e.preventDefault();
 		
 		if (!$(e.target).closest(".icon-cross").length) {
 			
-			$('.item_f').val('');
-			$('.item_f_head').val('');
+			const item_f = $('.item_f');
+			const item_f_head = $('.item_f_head');
+			item_f.val('');
+			item_f_head.val('');
 			
-			$('.shadow').removeClass('open');
+			const shadow = $('.shadow');
+			shadow.removeClass('open');
 			$('.popup').removeClass('open');
 
 			//Закрываем меню
-			$('.shadowmm').removeClass('open');
+			shadow.removeClass('open');
 			$('.mobile-menu').removeClass('open');
 			$('.js_open_mobile').removeClass('open');
 
-			var scrolltp = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop;
+			const scrolltp = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop;
 			body.attr("data-scroll", scrolltp);
-			$("body").addClass("body__menu_open");
+			body.addClass("body__menu_open");
 			body.css('margin-top', '-' + scrolltp + 'px');
-			var mypopup = $('.' + $(this).attr('data-window'));
-			var thatID = $(this).attr('data-id');
-			
+			const mypopup = $('.' + $(this).attr('data-window'));
+			const thatID = $(this).attr('data-id');
+
 			$('.js-delete').attr('data-id', thatID);
 			mypopup.addClass("open");
 
-			$('.shadow').addClass('open');
+			shadow.addClass('open');
 
-			$('.shadow').scrollTop(0);
+			shadow.scrollTop(0);
 			$('.shadow_scroll').scrollTop(0);
 			
 			if ( $(this).hasClass('js-new')) 
 			{
-				$('.item_f').val('');
-				$('.item_f_head').val('');
-					
-				$('.item_f_head').focus();
+				item_f.val('');
+				item_f_head.val('');
+				item_f_head.focus();
 				$('.js-save').addClass('new');
 			
 			}
@@ -270,15 +273,14 @@ $(document).ready(function () {
 			$('.shadow').removeClass('open');
 			$('.popup').removeClass('open');
 			$('body').removeClass('open');
-			if ($("body").hasClass("body__menu_open")) {
-				var needed_scroll = $("body").attr("data-scroll");
-				$("body").removeClass("body__menu_open");
-				$("body").css('margin-top', '-' + 0 + 'px');
+			if (body.hasClass("body__menu_open")) {
+				const needed_scroll = body.attr("data-scroll");
+				body.removeClass("body__menu_open");
+				body.css('margin-top', '-' + 0 + 'px');
 				$(window).scrollTop(needed_scroll);
 
 			}
-		
-		};
+		}
 	
 
 	$(document).on('click',  function (e) {
@@ -296,7 +298,7 @@ $(document).ready(function () {
 		e.preventDefault();
 		$('.shadow').removeClass('open');
 		$('.popups').removeClass('open');
-		var needed_scroll = body.attr("data-scroll");
+		const needed_scroll = body.attr("data-scroll");
 		body.removeClass("body__menu_open");
 		body.css('margin-top', '-' + 0 + 'px');
 		$(window).scrollTop(needed_scroll);
@@ -316,57 +318,51 @@ $(document).ready(function () {
 			dataType: "json",
 			data: body_data,
 		}).then(function (data) {
-			if (data.result == 'ok') {
-				if (body_data.type == 'contents') {
-					//	$('.cards-items').html('');
-
+			if (data.result === 'ok') {
+				if (body_data.type === 'contents') {
 					$('.cards-items').html(data.value);
 					console.log("contents");
-
-					//ShowMessage('Список обновлен', 'ok', 5 );
+					//ShowMessage('Список обновлен', 'ok', 1 );
 				}
-				if (body_data.type == 'search_head') {
-					//	$('.cards-items').html('');
+				if (body_data.type === 'search_head') {
 					$('.cards-items').html(data.value);
 					console.log('search_head');
 				}
 
-				if (body_data.type == 'search') {
-					//	$('.cards-items').html('');
+				if (body_data.type === 'search') {
 					$('.cards-items').html(data.value);
 					console.log('search');
 				}
 
-				if (body_data.type == 'delete') {
+				if (body_data.type === 'delete') {
 					console.log('delete');
 					ShowMessage('Заметка удалена', 'ok', 3);
 				}
 
-				if (body_data.type == 'addnote') {
+				if (body_data.type === 'addnote') {
 					console.log('addnote');
 					ShowMessage('Заметка добавлена', 'ok', 3);
 				}
 
-				if (body_data.type == 'edit') {
+				if (body_data.type === 'edit') {
 					console.log('edit');
 					ShowMessage('Заметка изменена', 'ok', 3);
 				}
 
 
-				if (body_data.type == 'note') {
-					var heading = data.heading;
-					var mytext = data.text;
-					var id = data.id;
+				if (body_data.type === 'note') {
+					const heading = data.heading;
+					const mytext = data.text;
 
 					$('.item_f').val(mytext);
-					$('.item_f_head').val(heading);
-
-					$('.item_f_head').focus();
+					const item_f_head = $('.item_f_head');
+					item_f_head.val(heading);
+					item_f_head.focus();
 
 					console.log("note");
 				}
 			}
-			if (data.result == 'error') {
+			if (data.result === 'error') {
 				console.log('error');
 				ShowMessage(data.value, 'error', 5);
 			}
